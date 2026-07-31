@@ -1,4 +1,4 @@
-# PHP-Basics-Exercise-5
+# PHP-Exercise-5
 
 This is an exercise based off the basics of PHP.
 
