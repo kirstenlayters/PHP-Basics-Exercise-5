@@ -1,9 +1,8 @@
 <?php
-// Database connection setup
 $host = 'localhost';
 $db   = 'final_project';
-$user = 'root'; // Adjust to your MySQL username
-$pass = 'Kirsten.L1404';     // Adjust to your MySQL password
+$user = 'root';
+$pass = 'Kirsten.L1404';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8mb4", $user, $pass, [
@@ -14,14 +13,12 @@ try {
     die("Database connection failed: " . $e->getMessage());
 }
 
-// Variables for form handling (Add / Edit)
 $id = '';
 $name = '';
 $email = '';
 $message = '';
 $is_editing = false;
 
-// 1. DELETE ACTION
 if (isset($_GET['delete'])) {
     $delete_id = $_GET['delete'];
     $stmt = $pdo->prepare("DELETE FROM messages WHERE id = ?");
@@ -30,7 +27,6 @@ if (isset($_GET['delete'])) {
     exit;
 }
 
-// 2. FETCH DATA FOR EDIT ACTION
 if (isset($_GET['edit'])) {
     $edit_id = $_GET['edit'];
     $stmt = $pdo->prepare("SELECT * FROM messages WHERE id = ?");
@@ -46,7 +42,6 @@ if (isset($_GET['edit'])) {
     }
 }
 
-// 3. CREATE OR UPDATE ACTION (FORM SUBMISSION)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = trim($_POST['name']);
     $email = trim($_POST['email']);
@@ -55,11 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!empty($name) && !empty($email) && !empty($message)) {
         if (!empty($id)) {
-            // Update existing record
             $stmt = $pdo->prepare("UPDATE messages SET name = ?, email = ?, message = ? WHERE id = ?");
             $stmt->execute([$name, $email, $message, $id]);
         } else {
-            // Insert new record
             $stmt = $pdo->prepare("INSERT INTO messages (name, email, message) VALUES (?, ?, ?)");
             $stmt->execute([$name, $email, $message]);
         }
@@ -68,7 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// 4. FETCH ALL RECORDS FOR TABLE
 $stmt = $pdo->query("SELECT * FROM messages ORDER BY id DESC");
 $records = $stmt->fetchAll();
 ?>
